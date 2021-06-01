@@ -1,0 +1,67 @@
+<aura:component controller="SelectMenuCtrl">
+    
+    <aura:attribute name="ObjectName" type="String" default="Account"/>
+    <aura:attribute name="mutliselectPicklistName" type="String" default="Industry"/>    
+    <aura:attribute name="onChange" type="Aura.Action" access="GLOBAL" default="{!c.handleClick}"/>
+    <aura:attribute name="selectedValues" type="String" default=""/>
+    <!--Local Attributes -->
+    <aura:attribute name="selectOptionArray" type="Object[]" default="[{isSelected:false,value:'Option A'},{isSelected:false,value:'Option B'},{isSelected:false,value:'Option C'},{isSelected:false,value:'Option D'}]"/>
+    <aura:attribute name="selCount" type="Integer" default="0"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:method name="clickOption" action="{!v.onChange}"/>
+    <div class="slds">
+        <div aura:id="myPicklist" class="slds-picklist slds-dropdown-trigger slds-dropdown-trigger--click" aria-expanded="false" >
+            <button onclick="{!c.showOptions}" class="slds-button slds-button--neutral slds-picklist__label" aria-haspopup="true" aria-activedescendant="">
+                <span class="slds-truncate">
+                    <aura:if isTrue="{!v.selCount == 0}">
+                        Please Select Values
+                        <aura:set attribute="else">
+                            <aura:if isTrue="{!v.selCount == 1}">
+                                <aura:iteration items="{!v.selectOptionArray}" var="val">
+                                    <aura:if isTrue="{!val.isSelected}">{!val.value}</aura:if>
+                                </aura:iteration>
+                                <aura:set attribute="else">
+                                    <aura:if isTrue="{!v.selCount == v.selectOptionArray.length}">
+                                        All
+										<aura:set attribute="else">
+                                        	{!v.selCount} Selected
+                                        </aura:set>
+                                    </aura:if>
+                                </aura:set>
+                            </aura:if>
+                        </aura:set>
+                    </aura:if>     
+                </span>
+                <lightning:icon iconName="utility:down" size="small" alternativeText="Down"/>
+            </button>
+            <div class="slds-dropdown slds-dropdown--left">
+                <ul class="dropdown__list slds-dropdown--length-5" role="menu">
+                    <aura:iteration items="{!v.selectOptionArray}" var="item">
+                        
+                        <aura:if isTrue="{!item.isSelected}">
+                            <li aura:id="option" title="{!item.value}" class="slds-dropdown__item slds-is-selected" onclick="{!c.selectValue}">
+                                <a href="javascript:void(0);" role="menuitem" title="{!item.value}">
+                                    <p class="slds-truncate" title="{!item.value}">
+                                        <lightning:icon iconName="utility:check" size="xx-small" alternativeText="select" class="icn"/> 
+                                        {!item.value} 
+                                    </p>
+                                </a>
+                            </li>
+                            <aura:set attribute="else">
+                                <li aura:id="option" title="{!item}" class="slds-dropdown__item" onclick="{!c.selectValue}">
+                                    <a href="javascript:void(0);" role="menuitem" title="{!item.value}">
+                                        <p class="slds-truncate" title="{!item.value}">
+                                            <lightning:icon iconName="utility:checks" size="xx-small" alternativeText="Down"/>
+                                            {!item.value}
+                                        </p>
+                                    </a>
+                                </li>
+                            </aura:set>
+                        </aura:if>
+                    </aura:iteration>
+                </ul>
+            </div>
+        </div>
+    </div>
+</aura:component>
